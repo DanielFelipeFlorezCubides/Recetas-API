@@ -1,97 +1,188 @@
-# Plataforma de Recetas Culinarias
+# 🍳 Plataforma de Recetas Culinarias – Módulo de Ingredientes
 
-Desarrollar una API REST para una Plataforma de Recetas Culinarias donde los usuarios puedan registrarse, agregar sus recetas y detallar sus ingredientes, así como buscar recetas por ingrediente y consultar las recetas creadas por un usuario en particular.
+Este módulo forma parte de la **API REST** para una plataforma de recetas culinarias desarrollada con **Node.js**, **Express** y **MongoDB** usando la librería oficial `mongodb`.  
+Permite agregar, listar, buscar y eliminar ingredientes de las recetas, utilizando **slugs** en lugar de IDs para facilitar el uso de la API.
 
-### Contexto funcional
+---
 
-Tu equipo ha sido contratado para desarrollar una API que será la base de una futura aplicación web de recetas. El sistema debe permitir:
+## 📦 Tecnologías usadas
+- Node.js
+- Express
+- MongoDB (driver oficial)
+- Dotenv
 
-Gestión de usuarios
+---
+## 1. Instalar dependencias:
+```
+npm install
+```
 
-Registrar nuevos usuarios en la plataforma.
+## 2. Configurar el archivo .env:
+```
+PORT=5500
+DB_URI=mongodb://localhost:27017/
+DB_NAME=comidas
+```
 
-Consultar la lista de todos los usuarios registrados.
+## 3. Poblar la base de datos con datos de ejemplo:
+```
+npm run seed
+```
 
-Ver la información detallada de un usuario en específico.
+## 4. Iniciar el servidor:
+```
+npm start
+```
 
-Actualizar los datos de un usuario.
+## 📑 Endpoints del módulo de ingredientes
 
-Eliminar un usuario y todas sus recetas asociadas.
+> Todos los endpoints usan **slugs** para identificar recetas e ingredientes.
 
-Gestión de recetas
+------
 
-Permitir que un usuario pueda registrar una nueva receta con su título y descripción.
+### 1️⃣ Agregar ingrediente a una receta
 
-Listar todas las recetas disponibles en la plataforma.
+**POST** `/ingredientes/receta/:recetaSlug`
 
-Consultar una receta en específico con todos sus ingredientes.
+- **Descripción:** Agrega un nuevo ingrediente a una receta existente.
 
-Editar el título o descripción de una receta.
+- **Parámetros de ruta:**
 
-Eliminar una receta.
+  - `recetaSlug` → slug de la receta (ej. `pollo-al-horno`)
 
-Listar todas las recetas que pertenecen a un usuario específico (ej. “ver todas las recetas de Juan Pérez”).
+- **Body (JSON):**
 
-Gestión de ingredientes
+  ```
+  {
+    "nombre": "Sal marina"
+  }
+  ```
 
-Agregar ingredientes a una receta existente (cada ingrediente tendrá un nombre y estará vinculado a una receta).
+- **Ejemplo de request:**
 
-Ver todos los ingredientes de una receta.
+  ```
+  POST /ingredientes/receta/pollo-al-horno
+  
+  {
+    "nombre": "Sal marina"
+  }
+  ```
 
-Eliminar ingredientes de una receta.
+- **Ejemplo de response:**
 
-Buscar todas las recetas que contengan un ingrediente específico (ej. “pollo” muestra todas las recetas que lo usan).
+  ```
+  {
+    "mensaje": "Ingrediente agregado correctamente",
+    "ingrediente": {
+      "nombre": "Sal marina",
+      "slug": "sal-marina"
+    }
+  }
+  ```
 
-### Requerimientos técnicos
+------
 
-El proyecto debe estar desarrollado con Node.js, Express, MongoDB y Dotenv.
+### 2️⃣ Ver ingredientes de una receta
 
-La conexión a la base de datos debe estar en un archivo separado y reutilizable.
+**GET** `/ingredientes/receta/:recetaSlug`
 
-Debe tener rutas organizadas por funcionalidad.
+- **Descripción:** Obtiene todos los ingredientes de una receta.
 
-Incluir un script de inicialización (
+- **Parámetros de ruta:**
 
-dataset.js
+  - `recetaSlug` → slug de la receta.
 
-) que inserte datos de prueba.
+- **Ejemplo de request:**
 
-Documentar cada endpoint en el README con:
+  ```
+  GET /ingredientes/receta/pollo-al-horno
+  ```
 
-Método HTTP.
+- **Ejemplo de response:**
 
-URL.
+  ```
+  [
+    { "nombre": "Pollo", "slug": "pollo" },
+    { "nombre": "Sal marina", "slug": "sal-marina" }
+  ]
+  ```
 
-Descripción funcional.
+------
 
-Ejemplo de request y response (puede ser en JSON).
+### 3️⃣ Eliminar un ingrediente de una receta
 
-El código debe manejar errores y devolver mensajes claros al usuario.
+**DELETE** `/ingredientes/receta/:recetaSlug/ingrediente/:ingredienteSlug`
 
-### Entregables
+- **Descripción:** Elimina un ingrediente específico de una receta.
 
-Repositorio en GitHub con:
+- **Parámetros de ruta:**
 
-Código fuente.
+  - `recetaSlug` → slug de la receta.
+  - `ingredienteSlug` → slug del ingrediente a eliminar.
 
-README documentado con instrucciones y endpoints.
+- **Ejemplo de request:**
 
-Video demostrativo (máx. 10 minutos y con cámara activa de todos los integrantes) usando Insomnia o Postman, mostrando:
+  ```
+  DELETE /ingredientes/receta/pollo-al-horno/ingrediente/sal-marina
+  ```
 
-Ejecución de cada operación solicitada.
+- **Ejemplo de response:**
 
-Búsqueda por ingrediente.
+  ```
+  { "mensaje": "Ingrediente eliminado correctamente" }
+  ```
 
-Listado de recetas por usuario.
+------
 
-⚠️ El link del video debe agregarse en el Readme
+### 4️⃣ Buscar recetas por ingrediente
 
-### Modalidad de trabajo
+**GET** `/ingredientes/buscar/:ingredienteSlug`
 
-Grupos de máximo 3 personas.
+- **Descripción:** Obtiene todas las recetas que contengan un ingrediente específico.
 
-Todos los integrantes deben aparecer en el README con nombre completo.
+- **Parámetros de ruta:**
 
-## Entrega
+  - `ingredienteSlug` → slug del ingrediente a buscar.
 
-Jueves 14 de agosto de 2025 a las 11:59:59 p.m.
+- **Ejemplo de request:**
+
+  ```
+  GET /ingredientes/buscar/sal-marina
+  ```
+
+- **Ejemplo de response:**
+
+  ```
+  [
+    {
+      "titulo": "Pollo al horno",
+      "slug": "pollo-al-horno",
+      "ingredientes": [
+        { "nombre": "Pollo", "slug": "pollo" },
+        { "nombre": "Sal marina", "slug": "sal-marina" }
+      ]
+    }
+  ]
+  ```
+
+------
+
+## 🚨 Manejo de errores
+
+El módulo devuelve mensajes claros en caso de error:
+
+- **404** → Receta o ingrediente no encontrado.
+- **400** → Datos inválidos o faltantes.
+- **500** → Error interno del servidor.
+
+Ejemplo:
+
+```
+{ "error": "El campo 'nombre' es obligatorio" }
+```
+
+------
+
+## 👨‍💻 Autor
+
+Módulo desarrollado por Daniel Florez Cubides.
