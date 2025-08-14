@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agregar Receta</title>
+</head>
+<body>
+  <h1>Agregar Receta</h1>
+  <form id="form-receta">
+    <input type="text" id="titulo" placeholder="Título" required><br><br>
+    <textarea id="descripcion" placeholder="Descripción" required></textarea><br><br>
+    <input type="text" id="ingredientes" placeholder="Ingredientes separados por coma" required><br><br>
+    <button type="submit">Guardar</button>
+  </form>
+
+  <h2>Lista de Recetas</h2>
+  <ul id="lista-recetas"></ul>
+
+  <script>
+    const form = document.getElementById('form-receta');
+    const lista = document.getElementById('lista-recetas');
+
+    // Cargar recetas al inicio
+    async function cargarRecetas() {
+      const res = await fetch('http://localhost:5500/recetas/getall');
+      const data = await res.json();
+      lista.innerHTML = data.map(r => `<li><strong>${r.titulo}</strong>: ${r.descripcion}</li>`).join('');
+    }
+
+    cargarRecetas();
+
+    // Evento para enviar receta
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const titulo = document.getElementById('titulo').value;
+      const descripcion = document.getElementById('descripcion').value;
+      const ingredientes = document.getElementById('ingredientes').value.split(',');
+
+      await fetch('http://localhost:5500/recetas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ titulo, descripcion, ingredientes })
+      });
+
+      form.reset();
+      cargarRecetas();
+    });
+  </script>
+</body>
+</html>
