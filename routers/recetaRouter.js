@@ -23,24 +23,27 @@ router.get("/get/:id", async function (req, res) {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+// POST CREAR RECETA
 router.post("/create", async function (req, res) {
-  try {
+  
     const { id, titulo, clientID, descripcion, ingredientes } = req.body;
-    if (!id || !nombre || !habilidad || !descripcion || !ingredientes === undefined) {
+     /* console.log(req.body);  */
+    
+    if (!id || !titulo || !clientID || !descripcion || !ingredientes === undefined) {
       res.status(400).json({ error: "Invalid asdasdsadsad!" });
     }
     const receta = {
-      id,
-      clientID,
-      titulo,
-      descripcion,
-      ingredientes
+      id: id,
+      clientID: clientID,
+      titulo: titulo,
+      descripcion: descripcion,
+      ingredientes: ingredientes
     };
-    await getDB().collection("recetas").insertOne(receta);
+    const response = await getDB().collection("recetas").insertOne(receta);
+    console.log(response);
+    
     res.status(201).json({ message: "Receta created!!" });
-  } catch (error) {
-    res.status(500).json({ error: "Internal servasdasdsadasdsaer error" });
-  }
+  
 });
 
 
