@@ -1,0 +1,1 @@
+import { connect, getDB } from "./config.js";
