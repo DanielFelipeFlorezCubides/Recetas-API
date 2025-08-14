@@ -1,15 +1,16 @@
-import { connect, getDB} from "./config.js"
+import {Router} from "express";
+import { getDB } from "../db/config.js";
 
-async function seed() {
-    const recetas= [
+const route = Router()
 
-    ];
-    await connect();
-    await getDB().collection("recetas").deleteMany();
-    await getDB().collection("recetas").insertMany(recetas);
+route.get("/getall", async function (req, res) {
+    try{
+        const recetas = await getDB().collection("recetas").find().toArray()
+        res.status(200).json(recetas)
+    }catch(error){
+        res.status(500).json({error: "Internal server error"})
+    }
+})
 
-    console.log("SE SUBIO TODO CARE CHIMBA");
-    process.exit()
-    
-}
-seed();
+
+export default route;

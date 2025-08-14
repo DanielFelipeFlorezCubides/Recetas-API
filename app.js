@@ -1,12 +1,14 @@
 import dotenv from "dotenv";
 import express from "express";
-import recetaRouter from "./routers/recetaRouter"
-import { connect } from "./db/config";
+import recetaRouter from "./routers/recetaRouter.js"
+import { connect } from "./db/config.js";
 
 dotenv.config();
 
-const port = process.env.PORT || 5500
+const port = process.env.PORT || 3000
 const app = express()
+
+app.use(express.json())
 
 app.use("/receta", recetaRouter);
 
@@ -16,7 +18,7 @@ app.get("/home", function(req, res){
 
 connect().then(() =>{
     app.listen(port, ()=>{
-        console.log("http://localhost:"+ port + "/home");
+        console.log("http://localhost:" + port + "/home");
         
-    })
+    })  
 })
