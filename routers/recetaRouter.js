@@ -46,5 +46,29 @@ router.post("/create", async function (req, res) {
   
 });
 
+router.put("/update/:id", async (req, res) => {
+  try {
+    const idReceta = parseInt(req.params.id);
+    const { titulo, descripcion} = req.body;
+
+    if (!titulo && !descripcion  ) {
+      return res.status(400).json({ error: "No data to update!" });
+    }
+
+    const result = await getDB().collection("recetas").updateOne(
+      { id: idReceta },
+      { $set: { ...(titulo && { titulo }), ...(descripcion && { descripcion }) } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: "Receta no encontrada!" });
+    }
+
+    res.status(200).json({ message: "Receta actualizada con exito!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+});
 
 export default router;
