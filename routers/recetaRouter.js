@@ -87,4 +87,25 @@ router.delete("/delete/:id", async (req, res) => {
       res.status(500).json({error: "Error en el servidor"})
     }
 })
+
+router.get("/usuario/:nombre", async (req, res) => {
+  try {
+    const nombreUsuario = req.params.nombre.toLowerCase();
+
+    // Busca recetas que tengan usuario con ese nombre
+    const recetasUsuario = await getDB()
+      .collection("recetas")
+      .find({ "usuario.nombre": { $regex: new RegExp(`^${nombreUsuario}$`, "i") } })
+      .toArray();
+
+    if (recetasUsuario.length === 0) {
+      return res.status(404).json({ mensaje: `No se encontraron recetas para el usuario: ${req.params.nombre}` });
+    }
+
+    res.json(recetasUsuario);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+});
 export default router;
