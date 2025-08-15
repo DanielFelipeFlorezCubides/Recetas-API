@@ -396,3 +396,7 @@ Este proyecto es de uso libre para fines educativos.
 - Breyner Pinto Cardenas
 - Daniel Florez Cubides
 - Mateo Paternina Mercado
+
+## Video
+
+[Video EndPoint](https://youtu.be/0ZzXP1E6kKg)
