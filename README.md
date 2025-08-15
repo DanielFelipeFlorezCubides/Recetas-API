@@ -273,18 +273,126 @@ Servidor escuchando en puerto 5500
    - Método: `GET`
    - URL: `http://localhost:5500/recetas/buscar/pollo`
 
-------
 
-## ⚠ Errores comunes
+## 1️⃣ Listar todas las recetas
 
-- **404 - Ruta no encontrada:** Revisar que la URL comience con `/recetas/` y que el router esté correctamente montado.
-- **400 - Body inválido:** Verificar `Content-Type: application/json` y formato correcto en POST.
-- **Conexión fallida a MongoDB:** Comprobar que la base de datos esté activa y que las variables `.env` sean correctas.
+- **Método:** `GET`
+- **URL:** `/receta/getall`
+- **Descripción:** Devuelve todas las recetas registradas.
+- **Ejemplo:**
 
-------
+GET http://localhost:5500/receta/getall
+
+
+---
+
+## 2️⃣ Obtener una receta por ID
+
+- **Método:** `GET`
+- **URL:** `/receta/get/{id}`
+- **Descripción:** Devuelve los datos de una receta específica según su `id`.
+- **Ejemplo:**
+
+GET http://localhost:5500/receta/get/1
+
+
+---
+
+## 3️⃣ Crear una receta
+
+- **Método:** `POST`
+- **URL:** `/receta/create`
+- **Body (JSON):**
+```json
+{
+  "id": 1,
+  "clientID": 101,
+  "titulo": "Tortilla de papas",
+  "descripcion": "Receta tradicional argentina",
+  "ingredientes": [
+    { "nombre": "Papa", "cantidad": "500g" },
+    { "nombre": "Huevo", "cantidad": "3 unidades" }
+  ]
+}
+```
+    Descripción: Crea una nueva receta en la base de datos.
+
+## 4️⃣ Actualizar una receta
+
+    Método: PUT
+
+    URL: /receta/update/{id}
+
+    Body (JSON):
+
+    {
+      "titulo": "Tortilla de papas con cebolla",
+      "descripcion": "Versión con cebolla caramelizada"
+    }
+
+    Descripción: Modifica el título y/o descripción de una receta específica.
+
+## 5️⃣ Eliminar una receta
+
+    Método: DELETE
+
+    URL: /receta/delete/{id}
+
+    Descripción: Elimina una receta por su ID.
+
+    Ejemplo:
+
+    DELETE http://localhost:5500/receta/delete/1
+
+## 6️⃣ Listar recetas por nombre de usuario
+
+    Método: GET
+
+    URL: /receta/usuario/{nombreUsuario}
+
+    Descripción: Devuelve todas las recetas asociadas a un usuario específico.
+
+    Ejemplo:
+
+    GET http://localhost:5500/receta/usuario/JuanPerez
+
+## 🧪 Pruebas con Insomnia o Postman
+
+    ## Listar todas las recetas
+
+        GET http://localhost:5500/receta/getall
+
+    ## Obtener receta por ID
+
+        GET http://localhost:5500/receta/get/1
+
+    ## Crear receta
+
+        POST http://localhost:5500/receta/create
+
+        Body JSON con id, clientID, titulo, descripcion y ingredientes.
+
+    ## Actualizar receta
+
+        PUT http://localhost:5500/receta/update/1
+
+        Body JSON con campos a actualizar.
+
+    ## Eliminar receta
+
+        DELETE http://localhost:5500/receta/delete/1
+
+    ## Listar recetas por usuario
+
+        GET http://localhost:5500/receta/usuario/JuanPerez
+
 
 ## 📜 Licencia
 
 Este proyecto es de uso libre para fines educativos.
 
+## AUTORES
 
+- Breyner Pinto Cardenas
+- Daniel Florez Cubides
+- Mateo Paternina Mercado
