@@ -26,15 +26,15 @@ router.get("/get/:id", async function (req, res) {
 // POST CREAR RECETA
 router.post("/create", async function (req, res) {
   
-    const { id, titulo, clientID, descripcion, ingredientes } = req.body;
+    const { id, titulo, usuario, descripcion, ingredientes } = req.body;
      /* console.log(req.body);  */
     
-    if (!id || !titulo || !clientID || !descripcion || !ingredientes === undefined) {
+    if (!id || !titulo || !usuario || !descripcion || !ingredientes === undefined) {
       res.status(400).json({ error: "Invalid asdasdsadsad!" });
     }
     const receta = {
       id: id,
-      clientID: clientID,
+      usuario: usuario,
       titulo: titulo,
       descripcion: descripcion,
       ingredientes: ingredientes
