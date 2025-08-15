@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { connect, getDB } from "./config.js";
 
 async function seed() {
@@ -161,6 +160,4 @@ async function seed() {
 }
 
 seed();
-=======
 import { connect, getDB } from "./config.js";
->>>>>>> feature/usuarios
