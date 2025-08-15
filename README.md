@@ -1,97 +1,154 @@
-# Plataforma de Recetas Culinarias
+# Gestión de Ingredientes
 
-Desarrollar una API REST para una Plataforma de Recetas Culinarias donde los usuarios puedan registrarse, agregar sus recetas y detallar sus ingredientes, así como buscar recetas por ingrediente y consultar las recetas creadas por un usuario en particular.
+Este módulo forma parte de un sistema de gestión de recetas, y permite **listar, agregar, eliminar y buscar ingredientes**de una receta almacenada en MongoDB.
 
-### Contexto funcional
+------
 
-Tu equipo ha sido contratado para desarrollar una API que será la base de una futura aplicación web de recetas. El sistema debe permitir:
+## 📋 Requisitos previos
 
-Gestión de usuarios
+- **Node.js** instalado (con soporte ESM: `"type": "module"` en `package.json`).
 
-Registrar nuevos usuarios en la plataforma.
+- **MongoDB** corriendo localmente o en la nube (Atlas).
 
-Consultar la lista de todos los usuarios registrados.
+- Dependencias instaladas:
 
-Ver la información detallada de un usuario en específico.
+  - `express`
+  - `mongodb`
+  - `dotenv`
 
-Actualizar los datos de un usuario.
+- Archivo `.env` con:
 
-Eliminar un usuario y todas sus recetas asociadas.
+  ```
+  PORT=5500
+  DB_URI=mongodb://localhost:27017
+  DB_NAME=recetasdb
+  ```
 
-Gestión de recetas
+------
 
-Permitir que un usuario pueda registrar una nueva receta con su título y descripción.
+## 📂 Estructura de carpetas
 
-Listar todas las recetas disponibles en la plataforma.
+```
+📦 Recetas-API
+ ┣ 📂 routes
+ ┃ ┗ ingredientesRouter.js
+ ┣ 📂 controllers
+ ┃ ┗ ingredientesController.js
+ ┣ 📂 db
+ ┃ ┣ config.js
+ ┃ ┗ dataset.js
+ ┣ app.js
+ ┣ package.json
+ ┗ .env
+```
 
-Consultar una receta en específico con todos sus ingredientes.
+------
 
-Editar el título o descripción de una receta.
+## 🗃 Poblar datos de prueba
 
-Eliminar una receta.
+El archivo `dataset.js` contiene recetas con ingredientes iniciales.
+Para cargar estos datos en MongoDB:
 
-Listar todas las recetas que pertenecen a un usuario específico (ej. “ver todas las recetas de Juan Pérez”).
+```
+npm run seed
+```
 
-Gestión de ingredientes
+Esto eliminará los datos anteriores y cargará el dataset de ejemplo.
 
-Agregar ingredientes a una receta existente (cada ingrediente tendrá un nombre y estará vinculado a una receta).
+------
 
-Ver todos los ingredientes de una receta.
+## 🚀 Iniciar el servidor
 
-Eliminar ingredientes de una receta.
+```
+npm start
+```
 
-Buscar todas las recetas que contengan un ingrediente específico (ej. “pollo” muestra todas las recetas que lo usan).
+Si todo funciona, deberías ver:
 
-### Requerimientos técnicos
+```
+🆗 MongoDB connected!!
+Servidor escuchando en puerto 5500
+```
 
-El proyecto debe estar desarrollado con Node.js, Express, MongoDB y Dotenv.
+------
 
-La conexión a la base de datos debe estar en un archivo separado y reutilizable.
+## 📌 Endpoints disponibles
 
-Debe tener rutas organizadas por funcionalidad.
+### 1️⃣ Listar ingredientes de una receta
 
-Incluir un script de inicialización (
+- **Método:** `GET`
+- **URL:** `/recetas/{idReceta}/ingredientes`
+- **Descripción:** Devuelve todos los ingredientes de una receta específica.
+- **Ejemplo:**
+  `/recetas/1/ingredientes`
 
-dataset.js
+------
 
-) que inserte datos de prueba.
+### 2️⃣ Agregar ingrediente a una receta
 
-Documentar cada endpoint en el README con:
+- **Método:** `POST`
 
-Método HTTP.
+- **URL:** `/recetas/{idReceta}/ingredientes`
 
-URL.
+- **Body (JSON):**
 
-Descripción funcional.
+  ```
+  {
+    "id": 5,
+    "nombre": "aceite de oliva"
+  }
+  ```
 
-Ejemplo de request y response (puede ser en JSON).
+- **Descripción:** Agrega un ingrediente nuevo a la receta indicada.
 
-El código debe manejar errores y devolver mensajes claros al usuario.
+------
 
-### Entregables
+### 3️⃣ Eliminar ingrediente de una receta
 
-Repositorio en GitHub con:
+- **Método:** `DELETE`
+- **URL:** `/recetas/{idReceta}/ingredientes/{idIngrediente}`
+- **Descripción:** Elimina un ingrediente específico de la receta.
+- **Ejemplo:**
+  `/recetas/1/ingredientes/3`
 
-Código fuente.
+------
 
-README documentado con instrucciones y endpoints.
+### 4️⃣ Buscar recetas por nombre de ingrediente
 
-Video demostrativo (máx. 10 minutos y con cámara activa de todos los integrantes) usando Insomnia o Postman, mostrando:
+- **Método:** `GET`
+- **URL:** `/recetas/buscar/{nombreIngrediente}`
+- **Descripción:** Devuelve todas las recetas que contengan el ingrediente buscado (búsqueda parcial y sin distinción de mayúsculas).
+- **Ejemplo:**
+  `/recetas/buscar/pollo`
 
-Ejecución de cada operación solicitada.
+------
 
-Búsqueda por ingrediente.
+## 🧪 Pruebas con Insomnia o Postman
 
-Listado de recetas por usuario.
+1. **Listar ingredientes**
+   - Método: `GET`
+   - URL: `http://localhost:5500/recetas/1/ingredientes`
+2. **Agregar ingrediente**
+   - Método: `POST`
+   - URL: `http://localhost:5500/recetas/1/ingredientes`
+   - Body: JSON con `id` y `nombre`.
+3. **Eliminar ingrediente**
+   - Método: `DELETE`
+   - URL: `http://localhost:5500/recetas/1/ingredientes/2`
+4. **Buscar recetas por ingrediente**
+   - Método: `GET`
+   - URL: `http://localhost:5500/recetas/buscar/pollo`
 
-⚠️ El link del video debe agregarse en el Readme
+------
 
-### Modalidad de trabajo
+## ⚠ Errores comunes
 
-Grupos de máximo 3 personas.
+- **404 - Ruta no encontrada:** Revisar que la URL comience con `/recetas/` y que el router esté correctamente montado.
+- **400 - Body inválido:** Verificar `Content-Type: application/json` y formato correcto en POST.
+- **Conexión fallida a MongoDB:** Comprobar que la base de datos esté activa y que las variables `.env` sean correctas.
 
-Todos los integrantes deben aparecer en el README con nombre completo.
+------
 
-## Entrega
+## 📜 Licencia
 
-Jueves 14 de agosto de 2025 a las 11:59:59 p.m.
+Este proyecto es de uso libre para fines educativos.

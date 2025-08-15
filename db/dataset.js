@@ -160,4 +160,3 @@ async function seed() {
 }
 
 seed();
-import { connect, getDB } from "./config.js";

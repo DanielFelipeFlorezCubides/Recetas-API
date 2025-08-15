@@ -2,36 +2,29 @@ import dotenv from "dotenv";
 import express from "express";
 import recetaRouter from "./routers/recetaRouter.js"
 import usuariosRouter from "./routers/comidaRouter.js";
+import ingredientesRouter from "./routers/ingredientesRouter.js";
 import { connect } from "./db/config.js";
 
 dotenv.config();
 const app = express();
 
-const port = process.env.PORT || 5500;
+const PORT = process.env.PORT || 5500;
 
+// Middleware para parsear JSON
 app.use(express.json());
 
-app.use("/receta", recetaRouter);
-
-app.get("/home", function (req, res) {
-  res.send("API DE RECETAS FUNCIONANDO CORRECTAMENTE, intercambia el /home por /receta")
-});
-
 connect().then(() => {
-  app.listen(port, () => {
-    console.log("http://localhost:" + port + "/home");
+  console.log("✅ Base de datos conectada");
 
-  });
-});
+  // Montar las rutas
+  app.use("/usuarios", usuariosRouter);
+  app.use("/receta", recetaRouter);
+  app.use("/recetas", ingredientesRouter);
 
-
-app.use("/usuarios", usuariosRouter);
-
-connect().then(() => {
-  const PORT = process.env.PORT || 5500;
+  // Iniciar el servidor
   app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
   });
 }).catch(err => {
-  console.error("❌ Could not start server:", err);
+  console.error("❌ Error al conectar a la base de datos:", err);
 });
